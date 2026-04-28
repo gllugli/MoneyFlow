@@ -10,5 +10,8 @@ node_modules/
 # Ignore collected static files
 staticfiles/
 
+# Ignore local SQLite database
+db.sqlite3
+
 # Ignore all files in the __pycache__ directory
 __pycache__
