@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Nova movimentação | MoneyFlow{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
     <section class="form-hero panel form-hero-panel">
-        <span class="eyebrow">Novo lançamento</span>
-        <h1>Registrar movimentação</h1>
-        <p class="subtitle">Cadastre entradas e saídas com um formulário simples, rápido e pensado para manter seu controle financeiro sempre atualizado.</p>
+        <span class="eyebrow">{{ form_eyebrow }}</span>
+        <h1>{{ form_heading }}</h1>
+        <p class="subtitle">{{ form_subtitle }}</p>
     </section>
 
     <section class="form-layout">
@@ -14,7 +14,7 @@
             <div class="section-header">
                 <div>
                     <h2 class="section-title">Dados da movimentação</h2>
-                    <p class="section-description">Preencha os campos abaixo para adicionar um novo registro ao histórico e atualizar o painel.</p>
+                    <p class="section-description">{{ form_section_description }}</p>
                 </div>
             </div>
 
@@ -93,29 +93,13 @@
 
                 <div class="form-actions">
                     <a class="button-ghost" href="{% url 'movements:movement_list' %}">Voltar para movimentações</a>
-                    <button class="button" type="submit">Salvar movimentação</button>
+                    <button class="button" type="submit">{{ form_submit_label }}</button>
                 </div>
             </form>
         </article>
 
         <aside class="panel support-panel">
-            <h2 class="support-heading">Boas práticas rápidas</h2>
-            <div class="support-list">
-                <div class="support-item">
-                    <strong>Descreva com clareza</strong>
-                    Use nomes objetivos para localizar lançamentos com mais facilidade depois.
-                </div>
-                <div class="support-item">
-                    <strong>Defina o tipo correto</strong>
-                    Entradas aumentam o saldo; saídas reduzem o saldo e aparecem destacadas no histórico.
-                </div>
-                <div class="support-item">
-                    <strong>Atualização imediata</strong>
-                    Assim que o cadastro for salvo, a movimentação passa a aparecer na tabela e no painel.
-                </div>
-            </div>
-
-            <h2 class="support-heading support-heading-spaced">Últimos registros</h2>
+            <h2 class="support-heading">Últimos registros</h2>
             {% if recent_movements %}
                 <div class="recent-list">
                     {% for movement in recent_movements %}

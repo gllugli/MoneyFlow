@@ -361,13 +361,11 @@
         @apply flex items-center justify-between gap-[14px] pt-1.5;
     }
 
-    .support-list,
     .recent-list,
     .dashboard-insights-list {
         @apply grid gap-[14px];
     }
 
-    .support-item,
     .dashboard-quick-card,
     .dashboard-insight-item,
     .dashboard-highlight-card {
@@ -376,7 +374,6 @@
         background: var(--surface-muted);
     }
 
-    .support-item strong,
     .dashboard-insight-item strong {
         @apply mb-1.5 block;
     }
@@ -542,6 +539,102 @@
         border-bottom: 0;
     }
 
+    .data-table tfoot th,
+    .data-table tfoot td {
+        @apply px-5 py-5 text-left;
+        border-top: 1px solid var(--border);
+        background: rgba(245, 237, 225, 0.82);
+    }
+
+    .table-total-label {
+        @apply text-[0.83rem] uppercase tracking-[0.08em] text-mist;
+    }
+
+    .table-total-value {
+        @apply font-serif text-[1.1rem] leading-none;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .table-total-note {
+        @apply text-sm text-mist;
+    }
+
+    .data-table th.table-actions-header,
+    .data-table td.table-actions-cell {
+        @apply text-center;
+    }
+
+    .table-actions {
+        @apply flex w-full items-center justify-center gap-2;
+    }
+
+    .icon-button {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full border transition duration-200 ease-out;
+        color: var(--accent-strong);
+        border-color: rgba(30, 107, 99, 0.14);
+        background: rgba(255, 255, 255, 0.78);
+    }
+
+    .icon-button svg {
+        display: block;
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+    }
+
+    .icon-button:hover,
+    .icon-button:focus-visible {
+        @apply -translate-y-px outline-none;
+        border-color: rgba(30, 107, 99, 0.26);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 12px 24px rgba(21, 77, 72, 0.14);
+    }
+
+    .icon-button-danger {
+        color: var(--expense);
+        border-color: rgba(177, 80, 61, 0.16);
+    }
+
+    .icon-button-danger:hover,
+    .icon-button-danger:focus-visible {
+        border-color: rgba(177, 80, 61, 0.3);
+        box-shadow: 0 12px 24px rgba(177, 80, 61, 0.14);
+    }
+
+    [data-delete-modal][hidden] {
+        display: none !important;
+    }
+
+    .modal-backdrop {
+        @apply fixed inset-0 z-50 grid place-items-center p-5;
+        background: rgba(31, 42, 45, 0.42);
+        backdrop-filter: blur(8px);
+    }
+
+    .modal-card {
+        @apply w-full max-w-[540px] rounded-panel border p-7 shadow-shell;
+        border-color: var(--border);
+        background: rgba(255, 251, 245, 0.96);
+    }
+
+    .modal-card h2 {
+        @apply mb-3 mt-0 font-serif text-[2rem] leading-tight;
+    }
+
+    .modal-text {
+        @apply m-0 text-base text-mist;
+        line-height: 1.7;
+    }
+
+    .modal-text strong {
+        color: var(--text);
+    }
+
+    .modal-actions {
+        @apply mt-6 flex items-center justify-end gap-3;
+    }
+
     .type-badge {
         @apply inline-flex items-center rounded-full px-3 py-[7px] text-[0.85rem] font-semibold;
     }
@@ -577,9 +670,6 @@
         @apply mt-0 text-[1.36rem];
     }
 
-    .support-heading-spaced {
-        @apply mt-7;
-    }
 }
 
 @media (max-width: 960px) {
@@ -617,7 +707,8 @@
 
     .nav-actions,
     .section-header,
-    .form-actions {
+    .form-actions,
+    .modal-actions {
         @apply flex-col items-stretch;
     }
 
@@ -664,7 +755,9 @@
         @apply px-4 py-[14px];
     }
 
-    .support-heading-spaced {
-        @apply mt-6;
+    .table-actions-cell,
+    .table-actions-header {
+        @apply min-w-[124px];
     }
+
 }

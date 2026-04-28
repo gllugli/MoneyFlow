@@ -40,6 +40,7 @@
                         <th>Tipo</th>
                         <th>Valor</th>
                         <th>Data</th>
+                        <th class="table-actions-header">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,15 +57,148 @@
                                     {% if movement.movement_type == 'credit' %}+{% else %}-{% endif %} R$ {{ movement.value|floatformat:2 }}
                                 </td>
                                 <td>{{ movement.date|date:'d/m/Y' }}</td>
+                                <td class="table-actions-cell">
+                                    <div class="table-actions">
+                                        <a
+                                            class="icon-button"
+                                            href="{% url 'movements:movement_update' movement.pk %}"
+                                            aria-label="Editar {{ movement.description }}"
+                                            title="Editar"
+                                        >
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M4 20h4l10-10-4-4L4 16v4Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+                                                <path d="m12 6 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+                                            </svg>
+                                        </a>
+                                        <button
+                                            class="icon-button icon-button-danger"
+                                            type="button"
+                                            aria-label="Excluir {{ movement.description }}"
+                                            title="Excluir"
+                                            data-delete-trigger
+                                            data-modal-target="delete-modal-{{ movement.pk }}"
+                                        >
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M4 7h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+                                                <path d="M9 4h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+                                                <path d="M7 7v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+                                                <path d="M10 11v5M14 11v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr class="empty-row">
-                            <td colspan="4">Nenhuma movimentação cadastrada ainda. Use o botão acima para registrar a primeira.</td>
+                            <td colspan="5">Nenhuma movimentação cadastrada ainda. Use o botão acima para registrar a primeira.</td>
                         </tr>
                     {% endif %}
                 </tbody>
+                <tfoot>
+                    <tr class="table-total-row">
+                        <th class="table-total-label" colspan="3" scope="row">Saldo final</th>
+                        <td class="table-total-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}" colspan="2">
+                            R$ {{ balance|floatformat:2 }}
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </section>
+
+    {% if movements %}
+        {% for movement in movements %}
+            <div class="modal-backdrop" id="delete-modal-{{ movement.pk }}" data-delete-modal hidden>
+                <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title-{{ movement.pk }}">
+                    <span class="eyebrow">Confirmação</span>
+                    <h2 id="delete-modal-title-{{ movement.pk }}">Excluir movimentação?</h2>
+                    <p class="modal-text">
+                        Você realmente deseja excluir <strong>{{ movement.description }}</strong>? Esta ação remove o registro do histórico.
+                    </p>
+
+                    <form method="post" action="{% url 'movements:movement_delete' movement.pk %}">
+                        {% csrf_token %}
+
+                        <div class="modal-actions">
+                            <button class="button" type="submit">Confirmar</button>
+                            <button class="button-ghost" type="button" data-delete-cancel>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function() {
+            const deleteTriggers = document.querySelectorAll('[data-delete-trigger]');
+            const deleteModals = document.querySelectorAll('[data-delete-modal]');
+            const cancelButtons = document.querySelectorAll('[data-delete-cancel]');
+            let activeModal = null;
+            let activeTrigger = null;
+
+            if (!deleteTriggers.length) {
+                return;
+            }
+
+            const closeModal = function() {
+                if (!activeModal) {
+                    return;
+                }
+
+                activeModal.hidden = true;
+
+                if (activeTrigger) {
+                    activeTrigger.focus();
+                }
+
+                activeModal = null;
+                activeTrigger = null;
+            };
+
+            const openModal = function(trigger, modal) {
+                if (!modal) {
+                    return;
+                }
+
+                activeTrigger = trigger;
+                activeModal = modal;
+                activeModal.hidden = false;
+
+                const cancelButton = activeModal.querySelector('[data-delete-cancel]');
+
+                if (cancelButton) {
+                    cancelButton.focus();
+                }
+            };
+
+            deleteTriggers.forEach(function(trigger) {
+                trigger.addEventListener('click', function() {
+                    const modal = document.getElementById(trigger.dataset.modalTarget);
+                    openModal(trigger, modal);
+                });
+            });
+
+            cancelButtons.forEach(function(button) {
+                button.addEventListener('click', closeModal);
+            });
+
+            deleteModals.forEach(function(modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && activeModal && !activeModal.hidden) {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
 {% endblock %}
