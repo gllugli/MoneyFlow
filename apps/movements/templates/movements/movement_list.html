@@ -97,8 +97,8 @@
                 </tbody>
                 <tfoot>
                     <tr class="table-total-row">
-                        <th class="table-total-label" colspan="3" scope="row">Saldo final</th>
-                        <td class="table-total-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}" colspan="2">
+                        <th class="table-total-label" colspan="2" scope="row">Saldo final</th>
+                        <td class="table-total-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}" colspan="3">
                             R$ {{ balance|floatformat:2 }}
                         </td>
                     </tr>
