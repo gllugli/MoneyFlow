@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Movimentações | MoneyFlow{% endblock %}
+
+{% block content %}
+    <section class="list-hero">
+        <div class="panel list-hero-panel">
+            <div>
+                <span class="eyebrow">Histórico financeiro</span>
+                <h1>Movimentações registradas</h1>
+                <p class="subtitle">Veja todas as entradas e saídas em ordem cronológica, com leitura mais clara para acompanhar sua rotina financeira sem esforço.</p>
+            </div>
+            <div class="list-hero-actions">
+                <a class="button" href="{% url 'movements:movement_create' %}">Registrar nova movimentação</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="summary-grid">
+        <article class="panel summary-card">
+            <strong>Total de entradas</strong>
+            <span class="trend-positive">R$ {{ total_credit|floatformat:2 }}</span>
+        </article>
+        <article class="panel summary-card">
+            <strong>Total de saídas</strong>
+            <span class="trend-negative">R$ {{ total_debit|floatformat:2 }}</span>
+        </article>
+        <article class="panel summary-card">
+            <strong>Registros</strong>
+            <span class="trend-neutral">{{ movement_count }}</span>
+        </article>
+    </section>
+
+    <section class="panel table-panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if movements %}
+                        {% for movement in movements %}
+                            <tr>
+                                <td>{{ movement.description }}</td>
+                                <td>
+                                    <span class="type-badge {% if movement.movement_type == 'credit' %}type-credit{% else %}type-debit{% endif %}">
+                                        {% if movement.movement_type == 'credit' %}Entrada{% else %}Saída{% endif %}
+                                    </span>
+                                </td>
+                                <td class="value {% if movement.movement_type == 'credit' %}value-credit{% else %}value-debit{% endif %}">
+                                    {% if movement.movement_type == 'credit' %}+{% else %}-{% endif %} R$ {{ movement.value|floatformat:2 }}
+                                </td>
+                                <td>{{ movement.date|date:'d/m/Y' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="empty-row">
+                            <td colspan="4">Nenhuma movimentação cadastrada ainda. Use o botão acima para registrar a primeira.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

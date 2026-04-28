@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova movimentação | MoneyFlow{% endblock %}
+
+{% block content %}
+    <section class="form-hero panel form-hero-panel">
+        <span class="eyebrow">Novo lançamento</span>
+        <h1>Registrar movimentação</h1>
+        <p class="subtitle">Cadastre entradas e saídas com um formulário simples, rápido e pensado para manter seu controle financeiro sempre atualizado.</p>
+    </section>
+
+    <section class="form-layout">
+        <article class="panel form-panel">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Dados da movimentação</h2>
+                    <p class="section-description">Preencha os campos abaixo para adicionar um novo registro ao histórico e atualizar o painel.</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <ul class="field-errors">
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="field">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    {{ form.description }}
+                    {% if form.description.help_text %}
+                        <p class="field-help">{{ form.description.help_text }}</p>
+                    {% endif %}
+                    {% if form.description.errors %}
+                        <ul class="field-errors">
+                            {% for error in form.description.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label for="{{ form.movement_type.id_for_label }}">{{ form.movement_type.label }}</label>
+                        {{ form.movement_type }}
+                        {% if form.movement_type.help_text %}
+                            <p class="field-help">{{ form.movement_type.help_text }}</p>
+                        {% endif %}
+                        {% if form.movement_type.errors %}
+                            <ul class="field-errors">
+                                {% for error in form.movement_type.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <label for="{{ form.value.id_for_label }}">{{ form.value.label }}</label>
+                        {{ form.value }}
+                        {% if form.value.help_text %}
+                            <p class="field-help">{{ form.value.help_text }}</p>
+                        {% endif %}
+                        {% if form.value.errors %}
+                            <ul class="field-errors">
+                                {% for error in form.value.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                    {{ form.date }}
+                    {% if form.date.help_text %}
+                        <p class="field-help">{{ form.date.help_text }}</p>
+                    {% endif %}
+                    {% if form.date.errors %}
+                        <ul class="field-errors">
+                            {% for error in form.date.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <a class="button-ghost" href="{% url 'movements:movement_list' %}">Voltar para movimentações</a>
+                    <button class="button" type="submit">Salvar movimentação</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="panel support-panel">
+            <h2 class="support-heading">Boas práticas rápidas</h2>
+            <div class="support-list">
+                <div class="support-item">
+                    <strong>Descreva com clareza</strong>
+                    Use nomes objetivos para localizar lançamentos com mais facilidade depois.
+                </div>
+                <div class="support-item">
+                    <strong>Defina o tipo correto</strong>
+                    Entradas aumentam o saldo; saídas reduzem o saldo e aparecem destacadas no histórico.
+                </div>
+                <div class="support-item">
+                    <strong>Atualização imediata</strong>
+                    Assim que o cadastro for salvo, a movimentação passa a aparecer na tabela e no painel.
+                </div>
+            </div>
+
+            <h2 class="support-heading support-heading-spaced">Últimos registros</h2>
+            {% if recent_movements %}
+                <div class="recent-list">
+                    {% for movement in recent_movements %}
+                        <article class="recent-item">
+                            <div>
+                                <strong>{{ movement.description }}</strong>
+                                <div class="recent-meta">{% if movement.movement_type == 'credit' %}Entrada{% else %}Saída{% endif %} • {{ movement.date|date:'d/m/Y' }}</div>
+                            </div>
+                            <div class="recent-value {% if movement.movement_type == 'credit' %}trend-positive{% else %}trend-negative{% endif %}">
+                                {% if movement.movement_type == 'credit' %}+{% else %}-{% endif %} R$ {{ movement.value|floatformat:2 }}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state empty-state-compact">
+                    <strong>Ainda não há registros.</strong>
+                    Seu primeiro lançamento aparecerá aqui assim que for salvo.
+                </div>
+            {% endif %}
+        </aside>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function() {
+            const valueInput = document.querySelector('[data-currency-input]');
+
+            if (!valueInput) {
+                return;
+            }
+
+            const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+
+            const formatValue = function(value) {
+                const digits = value.replace(/\D/g, '');
+
+                if (!digits) {
+                    return '';
+                }
+
+                return currencyFormatter.format(Number(digits) / 100);
+            };
+
+            const applyMask = function() {
+                valueInput.value = formatValue(valueInput.value);
+            };
+
+            valueInput.addEventListener('input', applyMask);
+            valueInput.addEventListener('blur', applyMask);
+            valueInput.addEventListener('paste', function() {
+                window.requestAnimationFrame(applyMask);
+            });
+
+            if (valueInput.value.trim()) {
+                applyMask();
+            }
+        })();
+    </script>
+{% endblock %}

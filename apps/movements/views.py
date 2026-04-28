@@ -2,15 +2,20 @@
 
 from decimal import Decimal
 
+from django.contrib import messages
 from django.db.models import Count, DecimalField, Q, Sum, Value
 from django.db.models.functions import Coalesce
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView
 
+from apps.movements.forms import MovementForm
 from apps.movements.models import Movement
 
 
-class DashboardView(TemplateView):
-    template_name = "core/dashboard.html"
+class MovementListView(ListView):
+    model = Movement
+    template_name = "movements/movement_list.html"
+    context_object_name = "movements"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -29,14 +34,25 @@ class DashboardView(TemplateView):
             ),
             movement_count=Count("id"),
         )
-        balance = totals["total_credit"] - totals["total_debit"]
-
         context.update(
             total_credit=totals["total_credit"],
             total_debit=totals["total_debit"],
             movement_count=totals["movement_count"],
-            balance=balance,
-            recent_movements=movement_manager.all()[:5],
-            latest_movement=movement_manager.first(),
         )
+        return context
+
+
+class MovementCreateView(CreateView):
+    model = Movement
+    form_class = MovementForm
+    template_name = "movements/movement_form.html"
+    success_url = reverse_lazy("movements:movement_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Movimentação registrada com sucesso.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recent_movements"] = Movement._default_manager.all()[:4]
         return context

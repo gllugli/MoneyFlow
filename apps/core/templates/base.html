@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MoneyFlow{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <main class="page">
+        <nav class="site-nav" aria-label="Main navigation">
+            <a class="brand" href="{% url 'core:dashboard' %}">
+                <span class="brand-mark">MF</span>
+                <span class="brand-text">
+                    <span class="brand-title">MoneyFlow</span>
+                    <span class="brand-subtitle">Controle financeiro pessoal</span>
+                </span>
+            </a>
+            <div class="nav-actions">
+                <a class="nav-link{% if request.resolver_match.view_name == 'core:dashboard' %} is-active{% endif %}" href="{% url 'core:dashboard' %}">Painel</a>
+                <a class="nav-link{% if request.resolver_match.view_name == 'movements:movement_list' %} is-active{% endif %}" href="{% url 'movements:movement_list' %}">Movimentações</a>
+                <a class="nav-link is-primary{% if request.resolver_match.view_name == 'movements:movement_create' %} is-active{% endif %}" href="{% url 'movements:movement_create' %}">Nova movimentação</a>
+            </div>
+        </nav>
+
+        {% if messages %}
+            <div class="message-stack">
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
