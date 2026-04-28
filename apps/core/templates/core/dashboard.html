@@ -3,155 +3,182 @@
 {% block title %}Painel | MoneyFlow{% endblock %}
 
 {% block content %}
-    <section class="dashboard-hero">
-        <article class="panel dashboard-hero-panel">
-            <span class="eyebrow">Visão geral</span>
-            <h1>Seu dinheiro, organizado em um só lugar.</h1>
-            <p class="subtitle">Acompanhe entradas, saídas e saldo atual em uma experiência pensada para facilitar decisões rápidas no seu controle financeiro.</p>
-
-            <div class="button-row">
-                <a class="button" href="{% url 'movements:movement_create' %}">Registrar movimentação</a>
-                <a class="button-secondary" href="{% url 'movements:movement_list' %}">Ver histórico completo</a>
+    <section class="dashboard-shell">
+        <div class="dashboard-heading">
+            <div>
+                <span class="eyebrow">Painel executivo</span>
+                <h1>Dashboard</h1>
+                <p class="subtitle">Acompanhe o desempenho do mês e identifique rapidamente o que mais impacta seu caixa.</p>
             </div>
-        </article>
 
-        <aside class="panel dashboard-hero-summary">
-            <span class="eyebrow">Resumo do momento</span>
-            <div class="dashboard-highlight-grid">
-                <div class="dashboard-highlight-card">
-                    <strong>Saldo atual</strong>
-                    <span class="dashboard-highlight-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}">R$ {{ balance|floatformat:2 }}</span>
+            <div class="dashboard-heading-actions">
+                <div class="button-row dashboard-heading-buttons">
+                    <a class="button" href="{% url 'movements:movement_create' %}">Nova movimentação</a>
+                    <a class="button-secondary" href="{% url 'movements:movement_list' %}">Abrir histórico</a>
                 </div>
-                <div class="dashboard-highlight-card">
-                    <strong>Movimentações registradas</strong>
-                    <span class="dashboard-highlight-value">{{ movement_count }}</span>
+            </div>
+        </div>
+
+        <section class="dashboard-banner panel">
+            <div>
+                <span class="dashboard-banner-label">Fechamento do mês</span>
+                <strong class="dashboard-banner-value {% if current_month_net > 0 %}trend-positive{% elif current_month_net < 0 %}trend-negative{% else %}trend-neutral{% endif %}">
+                    R$ {{ current_month_net|floatformat:"2g" }}
+                </strong>
+            </div>
+
+            <div class="dashboard-banner-grid">
+                <div class="dashboard-banner-card">
+                    <span>Comparação com {{ previous_month_label }}</span>
+                    <strong>
+                        {% if net_change_percentage > 0 %}+{% endif %}{{ net_change_percentage }}%
+                    </strong>
                 </div>
-                <div class="dashboard-highlight-card">
-                    <strong>Última atualização</strong>
-                    <p class="section-description">
+                <div class="dashboard-banner-card">
+                    <span>Dias ativos</span>
+                    <strong>{{ current_month_active_days }}</strong>
+                </div>
+                <div class="dashboard-banner-card">
+                    <span>Último registro</span>
+                    <strong>
                         {% if latest_movement %}
-                            {{ latest_movement.description }} em {{ latest_movement.date|date:'d/m/Y' }}.
+                            {{ latest_movement.date|date:'d/m' }}
                         {% else %}
-                            Comece registrando sua primeira movimentação.
+                            --
                         {% endif %}
-                    </p>
+                    </strong>
                 </div>
             </div>
-        </aside>
-    </section>
+        </section>
 
-    <section class="stats-grid">
-        <article class="panel stat-card">
-            <span class="stat-label">Saldo atual</span>
-            <p class="stat-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}">R$ {{ balance|floatformat:2 }}</p>
-            <p class="stat-helper">Resultado entre todas as entradas e saídas registradas.</p>
-        </article>
-        <article class="panel stat-card">
-            <span class="stat-label">Entradas</span>
-            <p class="stat-value trend-positive">R$ {{ total_credit|floatformat:2 }}</p>
-            <p class="stat-helper">Valores que aumentaram sua disponibilidade financeira.</p>
-        </article>
-        <article class="panel stat-card">
-            <span class="stat-label">Saídas</span>
-            <p class="stat-value trend-negative">R$ {{ total_debit|floatformat:2 }}</p>
-            <p class="stat-helper">Despesas e pagamentos registrados no sistema.</p>
-        </article>
-        <article class="panel stat-card">
-            <span class="stat-label">Registros</span>
-            <p class="stat-value trend-neutral">{{ movement_count }}</p>
-            <p class="stat-helper">Quantidade total de movimentações disponíveis para consulta.</p>
-        </article>
-    </section>
+        <section class="executive-kpi-grid">
+            <article class="panel executive-kpi-card">
+                <span class="executive-kpi-label">Saldo atual</span>
+                <strong class="executive-kpi-value {% if balance > 0 %}trend-positive{% elif balance < 0 %}trend-negative{% else %}trend-neutral{% endif %}">R$ {{ balance|floatformat:"2g" }}</strong>
+            </article>
 
-    <section class="dashboard-layout section-space-top">
-        <div class="panel dashboard-card">
+            <article class="panel executive-kpi-card">
+                <span class="executive-kpi-label">Entradas do mês</span>
+                <strong class="executive-kpi-value trend-positive">R$ {{ current_month_credit|floatformat:"2g" }}</strong>
+            </article>
+
+            <article class="panel executive-kpi-card">
+                <span class="executive-kpi-label">Saídas do mês</span>
+                <strong class="executive-kpi-value trend-negative">R$ {{ current_month_debit|floatformat:"2g" }}</strong>
+            </article>
+
+            <article class="panel executive-kpi-card">
+                <span class="executive-kpi-label">Ticket médio</span>
+                <strong class="executive-kpi-value trend-neutral">R$ {{ average_movement_value|floatformat:"2g" }}</strong>
+            </article>
+        </section>
+
+        <section class="executive-analytics-grid">
+            <article class="panel analytics-panel analytics-panel-wide">
+                <div class="section-header analytics-header">
+                    <div>
+                        <h2 class="section-title">Entradas x saídas nos últimos 6 meses</h2>
+                        <p class="section-description">Compare rapidamente a evolução do fluxo mensal e identifique períodos de maior pressão no caixa.</p>
+                    </div>
+                    <div class="chart-legend">
+                        <span><i class="legend-dot legend-dot-income"></i>Entradas</span>
+                        <span><i class="legend-dot legend-dot-expense"></i>Saídas</span>
+                    </div>
+                </div>
+
+                <div class="performance-chart">
+                    {% for month in six_months %}
+                        <div class="performance-month">
+                            <div class="performance-columns">
+                                <span class="performance-bar performance-bar-income" style="height: {{ month.income_height }}%;"></span>
+                                <span class="performance-bar performance-bar-expense" style="height: {{ month.expense_height }}%;"></span>
+                            </div>
+                            <div class="performance-meta">
+                                <strong>{{ month.label }}</strong>
+                                <span>R$ {{ month.net|floatformat:"2g" }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <aside class="panel analytics-panel cash-pulse-panel">
+                <div class="section-header analytics-header analytics-header-stack">
+                    <div>
+                        <h2 class="section-title">Pulso do resultado</h2>
+                        <p class="section-description">Linha de tendência com o resultado liquído mensal e sinais rápidos para agir cedo.</p>
+                    </div>
+                </div>
+
+                <div class="pulse-highlight">
+                    <span>Líquido de {{ current_month_label }}</span>
+                    <strong class="{% if current_month_net > 0 %}trend-positive{% elif current_month_net < 0 %}trend-negative{% else %}trend-neutral{% endif %}">R$ {{ current_month_net|floatformat:"2g" }}</strong>
+                </div>
+
+                <div class="sparkline-shell" aria-hidden="true">
+                    <svg viewBox="0 0 300 140" preserveAspectRatio="none">
+                        <polyline points="{{ net_points }}"></polyline>
+                    </svg>
+                </div>
+
+                <div class="pulse-metrics">
+                    <article>
+                        <span>Maior entrada</span>
+                        <strong class="trend-positive">R$ {{ largest_credit|floatformat:"2g" }}</strong>
+                    </article>
+                    <article>
+                        <span>Maior saída</span>
+                        <strong class="trend-negative">R$ {{ largest_debit|floatformat:"2g" }}</strong>
+                    </article>
+                    <article>
+                        <span>Última atividade</span>
+                        <strong>
+                            {% if days_since_last_movement is None %}
+                                Sem registros
+                            {% elif days_since_last_movement == 0 %}
+                                Hoje
+                            {% elif days_since_last_movement == 1 %}
+                                Ha 1 dia
+                            {% else %}
+                                Ha {{ days_since_last_movement }} dias
+                            {% endif %}
+                        </strong>
+                    </article>
+                </div>
+            </aside>
+        </section>
+
+        <section class="panel recent-panel section-space-top">
             <div class="section-header">
                 <div>
-                    <h2 class="section-title">Ações rápidas</h2>
-                    <p class="section-description">Acesse os pontos principais do sistema para registrar, revisar e acompanhar seu fluxo financeiro.</p>
+                    <h2 class="section-title">Movimentações recentes</h2>
+                    <p class="section-description">Acompanhe os últimos lançamentos sem sair do painel executivo.</p>
                 </div>
+                <a class="button-ghost" href="{% url 'movements:movement_list' %}">Ver todas</a>
             </div>
 
-            <div class="dashboard-quick-actions">
-                <article class="dashboard-quick-card">
-                    <h3>Registrar nova movimentação</h3>
-                    <p>Cadastre uma entrada ou saída em poucos passos e atualize seu painel automaticamente.</p>
-                    <div class="button-row button-row-tight">
-                        <a class="button" href="{% url 'movements:movement_create' %}">Nova movimentação</a>
-                    </div>
-                </article>
-
-                <article class="dashboard-quick-card">
-                    <h3>Consultar histórico</h3>
-                    <p>Revise todas as movimentações com contexto visual claro para entender seu comportamento financeiro.</p>
-                    <div class="button-row button-row-tight">
-                        <a class="button-secondary" href="{% url 'movements:movement_list' %}">Abrir movimentações</a>
-                    </div>
-                </article>
-            </div>
-        </div>
-
-        <aside class="panel dashboard-insights-panel">
-            <h2>Leituras rápidas</h2>
-            <p>Indicadores úteis para orientar seu acompanhamento diário sem precisar navegar por várias telas.</p>
-
-            <div class="dashboard-insights-list">
-                <div class="dashboard-insight-item">
-                    <strong>Maior volume</strong>
-                    {% if total_credit >= total_debit %}
-                        Entradas estão predominando no histórico registrado.
-                    {% else %}
-                        Saídas estão acima das entradas no histórico atual.
-                    {% endif %}
+            {% if recent_movements %}
+                <div class="recent-list">
+                    {% for movement in recent_movements %}
+                        <article class="recent-item recent-item-strong">
+                            <div>
+                                <strong>{{ movement.description }}</strong>
+                                <div class="recent-meta">
+                                    {% if movement.movement_type == 'credit' %}Entrada{% else %}Saida{% endif %} • {{ movement.date|date:'d/m/Y' }}
+                                </div>
+                            </div>
+                            <div class="recent-value {% if movement.movement_type == 'credit' %}trend-positive{% else %}trend-negative{% endif %}">
+                                {% if movement.movement_type == 'credit' %}+{% else %}-{% endif %} R$ {{ movement.value|floatformat:"2g" }}
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
-                <div class="dashboard-insight-item">
-                    <strong>Cadência de uso</strong>
-                    {% if movement_count %}
-                        {% if movement_count == 1 %}
-                            Você já possui 1 movimentação cadastrada.
-                        {% else %}
-                            Você já possui {{ movement_count }} movimentações cadastradas.
-                        {% endif %}
-                    {% else %}
-                        Ainda não há lançamentos. Comece pela página de cadastro para alimentar o painel.
-                    {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <strong>Nenhuma movimentação registrada ainda.</strong>
+                    Assim que você cadastrar entradas e saídas, o painel passara a exibir gráficos, comparativos e leituras automáticas.
                 </div>
-                <div class="dashboard-insight-item">
-                    <strong>Próximo passo</strong>
-                    Se quiser detalhar seus resultados, consulte a tabela completa de movimentações e acompanhe cada valor por data.
-                </div>
-            </div>
-        </aside>
-    </section>
-
-    <section class="panel recent-panel section-space-top">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Movimentações recentes</h2>
-                <p class="section-description">Os registros mais recentes aparecem aqui para facilitar a conferência do que acabou de entrar ou sair.</p>
-            </div>
-            <a class="button-ghost" href="{% url 'movements:movement_list' %}">Ver todas</a>
-        </div>
-
-        {% if recent_movements %}
-            <div class="recent-list">
-                {% for movement in recent_movements %}
-                    <article class="recent-item">
-                        <div>
-                            <strong>{{ movement.description }}</strong>
-                            <div class="recent-meta">{% if movement.movement_type == 'credit' %}Entrada{% else %}Saída{% endif %} • {{ movement.date|date:'d/m/Y' }}</div>
-                        </div>
-                        <div class="recent-value {% if movement.movement_type == 'credit' %}trend-positive{% else %}trend-negative{% endif %}">
-                            {% if movement.movement_type == 'credit' %}+{% else %}-{% endif %} R$ {{ movement.value|floatformat:2 }}
-                        </div>
-                    </article>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty-state">
-                <strong>Nenhuma movimentação registrada ainda.</strong>
-                Assim que você cadastrar entradas e saídas, este painel exibirá os dados mais recentes para acompanhamento rápido.
-            </div>
-        {% endif %}
+            {% endif %}
+        </section>
     </section>
 {% endblock %}

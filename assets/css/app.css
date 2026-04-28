@@ -401,6 +401,310 @@
         @apply mt-5;
     }
 
+    .dashboard-shell {
+        @apply grid gap-5;
+    }
+
+    .dashboard-shell h1 {
+        @apply mb-2;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+        line-height: 1.02;
+    }
+
+    .dashboard-shell .subtitle {
+        max-width: 44rem;
+        font-size: 0.98rem;
+        line-height: 1.65;
+    }
+
+    .dashboard-shell .section-title {
+        font-size: 1.42rem;
+    }
+
+    .dashboard-shell .section-description {
+        font-size: 0.95rem;
+        line-height: 1.65;
+    }
+
+    .dashboard-heading {
+        @apply grid items-end gap-5;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    }
+
+    .dashboard-heading-actions {
+        @apply flex flex-col items-end gap-4;
+    }
+
+    .dashboard-heading-buttons {
+        @apply mt-0 justify-end;
+    }
+
+    .period-pill {
+        @apply rounded-card border px-4 py-3 text-right;
+        min-width: 184px;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: rgba(255, 255, 255, 0.62);
+    }
+
+    .period-pill span,
+    .dashboard-banner-label,
+    .executive-kpi-label,
+    .impact-title {
+        @apply mb-2 block text-[0.78rem] font-bold uppercase tracking-[0.08em] text-mist;
+    }
+
+    .period-pill strong {
+        @apply block font-serif text-[1.2rem] text-ink;
+    }
+
+    .dashboard-banner {
+        @apply grid gap-5 p-[30px];
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+        background:
+            radial-gradient(circle at top right, rgba(212, 148, 67, 0.22), transparent 32%),
+            linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(245, 237, 225, 0.9));
+    }
+
+    .dashboard-banner-value {
+        @apply mb-3 block font-serif text-[clamp(2rem,3.2vw,2.85rem)] leading-none;
+    }
+
+    .dashboard-banner-text {
+        @apply m-0 max-w-[38rem] text-mist;
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    .dashboard-banner-grid {
+        @apply grid gap-3;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-banner-card,
+    .mix-card,
+    .impact-list-card {
+        @apply rounded-card border px-[18px] py-4;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: rgba(255, 255, 255, 0.68);
+    }
+
+    .dashboard-banner-card span,
+    .mix-card span,
+    .pulse-metrics span {
+        @apply mb-2 block text-[0.82rem] uppercase tracking-[0.08em] text-mist;
+    }
+
+    .dashboard-banner-card strong,
+    .mix-card strong,
+    .pulse-highlight strong,
+    .pulse-metrics strong {
+        @apply block font-serif text-[1.3rem] leading-tight;
+    }
+
+    .executive-kpi-grid {
+        @apply grid gap-4;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .executive-kpi-card,
+    .analytics-panel,
+    .detail-panel {
+        @apply p-[26px];
+    }
+
+    .executive-kpi-value {
+        @apply mb-3 block font-serif text-[clamp(1.5rem,2.4vw,2rem)] leading-none;
+    }
+
+    .executive-kpi-note,
+    .performance-meta span,
+    .mix-card small {
+        @apply m-0 block text-[0.94rem] text-mist;
+        line-height: 1.6;
+    }
+
+    .executive-kpi-note {
+        font-size: 0.9rem;
+    }
+
+    .executive-analytics-grid,
+    .executive-detail-grid {
+        @apply grid gap-5;
+        grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+    }
+
+    .analytics-panel-wide {
+        min-width: 0;
+    }
+
+    .analytics-header {
+        @apply mb-6;
+    }
+
+    .analytics-header-stack {
+        @apply items-start;
+    }
+
+    .chart-legend {
+        @apply flex flex-wrap items-center justify-end gap-4 text-[0.86rem] font-semibold text-mist;
+    }
+
+    .chart-legend span {
+        @apply inline-flex items-center gap-2;
+    }
+
+    .legend-dot {
+        @apply inline-block h-2.5 w-2.5 rounded-full;
+    }
+
+    .legend-dot-income {
+        background: var(--income);
+    }
+
+    .legend-dot-expense {
+        background: var(--expense);
+    }
+
+    .performance-chart {
+        @apply grid gap-4;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        align-items: end;
+    }
+
+    .performance-month {
+        @apply rounded-card border px-3 pb-3 pt-4;
+        min-height: 280px;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: rgba(255, 255, 255, 0.58);
+    }
+
+    .performance-columns {
+        @apply mb-4 flex h-[180px] items-end justify-center gap-2 rounded-soft px-2 pb-3 pt-4;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(244, 239, 231, 0.68));
+    }
+
+    .performance-bar {
+        @apply block max-w-[28px] rounded-t-full;
+        min-height: 0;
+        width: calc(50% - 4px);
+    }
+
+    .performance-bar-income {
+        background: linear-gradient(180deg, #3da37f 0%, var(--income) 100%);
+    }
+
+    .performance-bar-expense {
+        background: linear-gradient(180deg, #db7c69 0%, var(--expense) 100%);
+    }
+
+    .performance-meta {
+        @apply text-center;
+    }
+
+    .performance-meta strong,
+    .impact-item strong {
+        @apply mb-1 block text-[0.95rem] text-ink;
+    }
+
+    .cash-pulse-panel {
+        background:
+            radial-gradient(circle at top left, rgba(30, 107, 99, 0.12), transparent 36%),
+            rgba(255, 251, 245, 0.88);
+    }
+
+    .pulse-highlight {
+        @apply mb-5 rounded-card border px-5 py-4;
+        border-color: rgba(30, 107, 99, 0.12);
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    .pulse-highlight span {
+        @apply mb-2 block text-[0.82rem] uppercase tracking-[0.08em] text-mist;
+    }
+
+    .sparkline-shell {
+        @apply mb-5 overflow-hidden rounded-card border p-4;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(244, 239, 231, 0.86));
+    }
+
+    .sparkline-shell svg {
+        display: block;
+        width: 100%;
+        height: 150px;
+    }
+
+    .sparkline-shell polyline {
+        fill: none;
+        stroke: var(--accent-strong);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .pulse-metrics {
+        @apply grid gap-3;
+    }
+
+    .pulse-metrics article {
+        @apply rounded-card border px-[18px] py-4;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: rgba(255, 255, 255, 0.62);
+    }
+
+    .mix-rail {
+        @apply mb-5 flex h-4 overflow-hidden rounded-full;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    .mix-rail-income {
+        background: linear-gradient(135deg, #3da37f 0%, var(--income) 100%);
+    }
+
+    .mix-rail-expense {
+        background: linear-gradient(135deg, #db7c69 0%, var(--expense) 100%);
+    }
+
+    .mix-grid,
+    .impact-grid {
+        @apply grid gap-4;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .weekday-chart {
+        @apply mt-6 grid gap-3;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        align-items: end;
+    }
+
+    .weekday-column {
+        @apply text-center;
+    }
+
+    .weekday-bar {
+        @apply mx-auto mb-3 block h-0 w-full max-w-[36px] rounded-t-full;
+        min-height: 0;
+        background: linear-gradient(180deg, rgba(30, 107, 99, 0.4), var(--accent-strong));
+    }
+
+    .weekday-column strong {
+        @apply text-[0.82rem] uppercase tracking-[0.08em] text-mist;
+    }
+
+    .impact-list {
+        @apply grid gap-3;
+    }
+
+    .impact-item {
+        @apply flex items-center justify-between gap-3 rounded-soft border px-4 py-3;
+        border-color: rgba(52, 72, 74, 0.08);
+        background: rgba(244, 239, 231, 0.48);
+    }
+
+    .recent-item-strong {
+        background: rgba(255, 255, 255, 0.78);
+    }
+
     .dashboard-hero {
         @apply mb-6 grid gap-5;
         grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.9fr);
@@ -675,19 +979,36 @@
 @media (max-width: 960px) {
     .stats-grid,
     .summary-grid,
-    .dashboard-quick-actions {
+    .dashboard-quick-actions,
+    .executive-kpi-grid,
+    .performance-chart,
+    .weekday-chart,
+    .dashboard-banner-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .form-layout,
     .dashboard-hero,
     .dashboard-layout,
-    .list-hero-panel {
+    .list-hero-panel,
+    .dashboard-heading,
+    .dashboard-banner,
+    .executive-analytics-grid,
+    .executive-detail-grid {
         grid-template-columns: 1fr;
     }
 
     .list-hero-actions {
         justify-content: flex-start;
+    }
+
+    .dashboard-heading-actions,
+    .dashboard-heading-buttons {
+        @apply items-start justify-start;
+    }
+
+    .chart-legend {
+        @apply justify-start;
     }
 }
 
@@ -719,7 +1040,12 @@
     .stats-grid,
     .field-grid,
     .summary-grid,
-    .dashboard-quick-actions {
+    .dashboard-quick-actions,
+    .executive-kpi-grid,
+    .performance-chart,
+    .mix-grid,
+    .impact-grid,
+    .dashboard-banner-grid {
         grid-template-columns: 1fr;
     }
 
@@ -748,6 +1074,25 @@
 
     .recent-value {
         @apply text-left;
+    }
+
+    .period-pill {
+        min-width: 0;
+        width: 100%;
+        text-align: left;
+    }
+
+    .weekday-chart {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .performance-month {
+        min-height: 220px;
+    }
+
+    .performance-columns {
+        height: 140px;
     }
 
     .data-table th,
